@@ -1,5 +1,5 @@
-Abe: a free block chain browser for Bitcoin-based currencies.
-https://github.com/bitcoin-abe/bitcoin-abe
+Worldcoin-Abe: a free block chain browser for the Worldcoin currency.
+https://github.com/alferz/worldcoin-abe
 
     Copyright(C) 2011,2012,2013 by Abe developers.
     License: GNU Affero General Public License, see the file LICENSE.txt.
@@ -8,33 +8,81 @@ https://github.com/bitcoin-abe/bitcoin-abe
 Welcome to Abe!
 ===============
 
-This software reads the Bitcoin block file, transforms and loads the
-data into a database, and presents a web interface similar to Bitcoin
-Block Explorer, http://blockexplorer.com/.
+This software reads the Worldcoin block file, transforms and loads the
+data into a database, and presents a web interface.
 
-Abe draws inspiration from Bitcoin Block Explorer (BBE) and
+The original Abe software draws inspiration from Bitcoin Block Explorer (BBE) and
 BlockChain.info and seeks some level of compatibility with them but
-uses a completely new implementation.
+uses a completely new implementation. 
 
-Installation
+Worldcoin-Abe forks the original Abe project to simplify matters a bit by displaying
+just one coin: Worldcoin. This version removes the ability to display multiple coins
+or even multiple chains for the same coin for simplicity (there is no /chains screen).
+
+Installation - Worldcoin
 ------------
+
+Install and configure Postgres - see README-POSTGRES.txt.
+
+Install and run the Linux Worldcoin Daemon 
+from https://github.com/worldcoinproject/worldcoin-v0.8/
+
+Start Worldcoin Daemon and wait until it has fully downloaded the 
+Block Chain
+
+Modify abe.conf to point to your .worldcoin directory and either
+modify the logfile line to specify a log file, or comment out 
+the logfile line to log to console only.
+    
+    "dirname":"/path/to/.worldcoin",
+    logfile = "/path/to/abe.log"
 
 Issue:
 
-    python setup.py install
+    sudo python setup.py install
 
-This will install abe to your system. After you set up the config file and
-database (see below and README-<DB>.txt) you can run:
+This will install ABE to your system.
 
-    python -m Abe.abe --config myconf.conf --commit-bytes 100000 --no-serve
-    
-This will perform the initial data load and will take a long time.
-After it's fully synced, you can run the web server with: 
+Modify the abe-load.sh script to point to abe.conf in the directory
+where you downloaded worldcoin-abe:
 
-    python -m Abe.abe --config myconf.conf
-    
-To really get everything right see the README file for your type of
-database.
+    --config=/path/to/abe.conf
+
+To perform the initial blockchain load into the Postgres database, 
+run the abe-load.sh script. It is recommended to run this command 
+in a "screen" because the load will take a long time (12-24 Hours).
+During the load process you should see log messages either in the 
+log file or on screen:
+
+    block_tx 1 1
+    block_tx 2 2
+    ...
+
+Once loaded, the Postgres database is now synced up with the Worldcoin client.
+
+Now, configure Apache to use fast-cgi as described in README-FASTCGI.txt
+
+You should have a working WDC Explorer running on Port 80. It is also 
+recommended to run the server on port 443 with a valid HTTPS cert
+to ensure privacy of users. Enforce HTTPS redirect with in your apache site conf:
+
+        RewriteEngine On
+        RewriteCond %{REQUEST_URI} !static
+        RewriteCond %{REQUEST_URI} !q
+        RewriteCond %{SERVER_PORT} !^443$
+        RewriteRule ^ https://www.wdcexplorer.com%{REQUEST_URI} [L,R=301]
+
+To ensure the Postgres DB stays up to date, run abe-load.sh every time a new 
+block is found by adding this line to your worldcoin.conf file, then 
+restart the WDC Daemon:
+
+    blocknotify=/path/to/abe/abe-load.sh
+
+Congratulations, now you have a working WDC Explorer!
+
+
+Additional Installation Notes from the bitcoin-abe Developers:
+------------
 
 Abe depends on Python 2.7 (or 2.6), the pycrypto package, and an SQL
 database supporting ROLLBACK.  Abe runs on PostgreSQL, MySQL's InnoDB

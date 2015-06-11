@@ -72,7 +72,7 @@ CHAIN_CONFIG = [
     {"chain":"ScTestnet", "policy":"Sha256Chain",
      "code3":"SC0", "address_version":"\x6f", "magic":"\xca\xfe\xba\xbe"},
     {"chain":"Worldcoin", "policy":"Sha256Chain",
-     "code3":"WDC", "address_version":"\x49", "magic":"\xfb\xc0\xb6\xdb"},
+     "code3":"WDC", "address_version":"\x49", "magic":"\xfb\xc0\xb6\xdb", "decimals":"1"},
     {"chain":"NovaCoin"},
     {"chain":"CryptoCash"},
     {"chain":"Anoncoin", "policy":"Sha256Chain",
