@@ -1046,7 +1046,49 @@ class Abe:
         """, (q.upper(), q.upper())))
         return ret
 
+    def handle_t(abe, page):
+        abe.show_search_results(
+            page,
+            abe.search_hash_prefix(
+                b58hex(wsgiref.util.shift_path_info(page['env'])),
+                ('tx',)))
 
+    def handle_b(abe, page):
+        if page.get('chain') is not None:
+            chain = page['chain']
+            height = wsgiref.util.shift_path_info(page['env'])
+            try:
+                height = int(height)
+            except Exception:
+                raise PageNotFound()
+            if height < 0 or page['env']['PATH_INFO'] != '':
+                raise PageNotFound()
+
+            cmd = wsgiref.util.shift_path_info(page['env'])
+            if cmd is not None:
+                raise PageNotFound()  # XXX want to support /a/...
+
+            page['title'] = [escape(chain.name), ' ', height]
+            abe._show_block(page, page['dotdot'] + 'block/', chain, block_number=height)
+            return
+
+        abe.show_search_results(
+            page,
+            abe.search_hash_prefix(
+                shortlink_block(wsgiref.util.shift_path_info(page['env'])),
+                ('block',)))
+
+    def handle_a(abe, page):
+        arg = wsgiref.util.shift_path_info(page['env'])
+        if abe.shortlink_type == "firstbits":
+            addrs = map(
+                abe._found_address,
+                abe.store.firstbits_to_addresses(
+                    arg.lower(),
+                    chain_id = page['chain'] and page['chain'].id))
+        else:
+            addrs = abe.search_address_prefix(arg)
+        abe.show_search_results(page, addrs)
 
     def handle_unspent(abe, page):
         abe.do_raw(page, abe.do_unspent)
@@ -1401,7 +1443,7 @@ class Abe:
 
         return ("ERROR: please try again" if total is None else
                 format_satoshis(total, chain))
-
+                
     def serve_static(abe, path, start_response):
         slen = len(abe.static_path)
         if path[:slen] != abe.static_path:
