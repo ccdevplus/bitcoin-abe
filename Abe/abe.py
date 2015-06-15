@@ -81,6 +81,7 @@ DEFAULT_TEMPLATE = """
     <link rel="stylesheet" type="text/css"
      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
     <link rel="shortcut icon" href="%(dotdot)s%(STATIC_PATH)sfavicon.ico" />
+    <meta name="description" content="The Worldcoin (WDC) Explorer lets you search for your Worldcoin wallet address, or individual Worldcoin blocks and transactions to see the status of the Worldcoin crypto-currency in real time." />
     <title>%(title)s</title>
 </head>
 <body>
@@ -91,6 +92,9 @@ DEFAULT_TEMPLATE = """
         <span style="font-size:36px;vertical-align:middle; margin-left: 10px">
             Worldcoin (WDC) Explorer
         </span>
+        <h2>
+            Welcome to the Worldcoin (WDC) Explorer! The Worldcoin (WDC) Explorer lets you search for your Worldcoin wallet address, or individual Worldcoin blocks and transactions to see the status of the Worldcoin crypto-currency in real time. Comments and tips appreciated, see links at the bottom of the page!
+        </h2>
         <div>
             %(search_form)s
         </div>
