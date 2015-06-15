@@ -39,7 +39,7 @@ import base58
 
 __version__ = version.__version__
 
-ABE_APPNAME = "Abe"
+ABE_APPNAME = "Worldcoin-Abe"
 ABE_VERSION = __version__
 ABE_URL = 'https://github.com/alferz/worldcoin-abe'
 
@@ -107,7 +107,7 @@ DEFAULT_TEMPLATE = """
                 <a href="%(dotdot)saddress/%(DONATIONS_WDC)s">WDC</a>
             </b><br>
             <span style="font-style: italic">
-                Powered by <a href="%(ABE_URL)s">%(APPNAME)s</a>
+                Powered by <a href="%(ABE_URL)s">%(APPNAME)s</a> - Report issues at Github Issue Tracker
             </span>
         </p>
     </div>
