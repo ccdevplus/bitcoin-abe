@@ -61,7 +61,7 @@ CONFIG_DEFAULTS = {
 }
 
 WORK_BITS = 304  # XXX more than necessary.
-// x49, x4e, x43, x50;
+# x49, x4e, x43, x50;
 CHAIN_CONFIG = [
     {"chain":"Inception", "policy":"X11PosChain",
      "code3":"INCP", "address_version":"\x66", "magic":"\x49\x4e\x43\x50"},
